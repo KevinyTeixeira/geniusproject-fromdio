@@ -13,22 +13,13 @@
 
 /**********************************/
 /* SUMARY
-/**********************************/
 
-/**********************************/
-/* COLOR GUIDE:
-/* #2003c5 : normal-blue
-/* #1f60eb : light-blue
-/* #6464a5 : soft-blue
-/* #ffe600 : normal-yellow
-/* #ebcc1f : light-yellow
-/* #c5b803 : soft-yellow
-/* #eb1f1f : normal-red
-/* #c50303 : light-red
-/* #c04d4d : soft-red
-/* #41eb1f : normal-green
-/* #6bc503 : light-green
-/* #4dc04d : soft-green
+/* 0. VARIABLES
+/* 1. TAGS + ANIMATIONS 
+/* 2. BODY
+/* 3. GAME
+/*  3.1 COLORS
+/*  3.2 CONT/START
 
 /* NOTES:
 /* Some effects used are maked by animista:
@@ -36,11 +27,10 @@
 /* The game has made with tutorials like:
 /* - DIO CONTENT (https://web.dio.me/home);
 /* - Inkasa Dev (https://www.youtube.com/channel/UCPGJqGxkYfmxO77LCh2Vimw);
-
 /**********************************/
 
 /**********************************/
-/* 0. VARIÁVEIS
+/* 0. VARIABLES
 /**********************************/
 
 :root {
@@ -84,22 +74,15 @@ html {
 body {
     background: linear-gradient( rgba(0, 0, 0, 0.5) 100%,
      rgba(0, 0, 0, 0.5)100%),
-     url("https://1.bp.blogspot.com/-ImkuaBR60yY/YOmby7RgCnI/AAAAAAAAiq0/h_rhcKMhzkscvRwZWBFE5J8nQmMnieMCgCLcBGAsYHQ/s1920/GAMER-WALLPAPER-HD.png") no-repeat center;
-
+     url("https://1.bp.blogspot.com/-ImkuaBR60yY/YOmby7RgCnI/AAAAAAAAiq0/h_rhcKMhzkscvRwZWBFE5J8nQmMnieMCgCLcBGAsYHQ/s1920/GAMER-WALLPAPER-HD.png") repeat center;
     font-family: 'Bungee', verdana, sans-serif;
     overflow: hidden;
 }
 
 footer {
     text-align: center;
-    margin-top: 1s5rem;
+    margin-top: 1.5rem;
     font-size: 1rem;
-}
-
-.canvas-particles {
-    opacity: 5.6;
-    transition: transform 0.4s ease;
-    z-index: -99;
 }
 
 /*  ANIMATIONS */
@@ -178,8 +161,13 @@ footer {
 .main-game {
     width: var(--game-size);
     margin-left: auto;
-    margin-right: auto;
-    position: relative;
+    margin-right: auto;    
+}
+
+.canvas-particles {
+    opacity: 5.6;
+    transition: transform 0.4s ease;
+    z-index: -99;
 }
 
 #title {
@@ -361,7 +349,7 @@ footer {
     text-transform: uppercase;
 }
 .gui__btn {
-    box-shadow: 0 .2rem .4rem #222;
+    box-shadow: 0 .2rem .4rem #222222;
     width: 3rem;
     height: 3rem;
     border-radius: 5rem;
