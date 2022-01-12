@@ -8,7 +8,7 @@ A DIO ensinou uma forma simplificada de criar o jogo do `Genius`, entretanto com
 
 ## :video_game: > 0. O Jogo
 
- Não quer perder tempo e deseja conferir logo o resultado final? [Clique aqui!]()
+ Não quer perder tempo e deseja conferir logo o resultado final? [Clique aqui!](https://kevinyteixeira.github.io/geniusproject-fromdio/)
 
 
 
