@@ -707,11 +707,6 @@ var setScore = () => {
     
     // A primeira coisa, seria invocar o score, que já armazenamos em '_data.score'. Se lembra? Mas o Score é um número, precisamos convertê-lo para STRING a fim de manipular seus caracteres e recebê-los com o 'score.length'.
     
-    sempre apareça dois dígitos no meu display, quando estiver entre 1 e 9, 0 atrás. de 10 pra frente, não precisa mais aparecer o 0.
-    
-    "00" vai de 0 até 2 - score.length
-    
-    
     const score = _data.score.toString(); // Para facilitar, fizemos a chamada do '_data.score', transformamos em string utilizando o método '.toString()' e declaramos seu resultado a variável 'score', tudo na mesma sentença.
     
     // A essa altura sabemos que 'score.length', retorna quantos caracteres o número tem.
