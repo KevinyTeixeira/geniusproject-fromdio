@@ -205,7 +205,7 @@ Se seu navegador não suportar HTML5 você verá esta mensagem.
 
 
 
-### :blue_book: 3.1 Style.css
+### :blue_book: 2.2 Style.css
 
 #### 	**- `<border-box>`Snippet** 
 
@@ -386,16 +386,348 @@ body {
 
 /* 7. Centralizando o jogo no centro da página */
 .main-game {
-    width: var(--game-size);  /* Usando uma variável definida em :root */
+    width: var(--game-size);  /* Usando uma variável definida em :root, a dimensão deve ser menor do que a classe pai */
     margin-left: auto;
-    margin-right: auto; /* Se trata da barra de rolagem */
+    margin-right: auto;
+}
+
+/* 8. Duas animações num único elemento */
+#title{
+	animation:
+		glow 1.5s linear infinite,
+		tracking-in-contract-bck 5s cubic-bezier(0.215, 0.610, 0.355, 1.000) both;
+}
+
+/* 9. Tipos de animações e suas compatibilidades */
+-webkit-animation:glow 1.5s linear infinite; /* Safari & Chrome */
+-moz-animation:glow 1.5s linear infinite; /* Firefox */
+-ms-animation:glow 1.5s linear infinite; /* Internet Explorer */
+-o-animation:glow 1.5s linear infinite; /* Opera */
+animation:glow 1.5s linear infinite; /* W3C | Maximum Compatibility */
+
+
+/* 10. Display Flex e Flex Wrap */
+/* Flex Contâiner é uma assunto importante e com muitas informações para entender seu comportamento, consulte: https://developer.mozilla.org/pt-BR/docs/Web/CSS/CSS_Flexible_Box_Layout/Basic_Concepts_of_Flexbox */
+.genius {
+	width: var(--game-size);
+	height: var(--game-size);
+	display: flex; /* Flex alinha todos as classes filhos em linha, não há quebra de linhas */
+	flex-wrap: wrap; /* Faz com que cada linha, seja considerado um novo contêiner flex */
+}
+
+/* 11. Criar o efeito de Movimento no botão START */
+/* Para fazer isso, o que foi feito é incluir a propriedade box-shadow no botão, e ao ativá-lo, removemos a sombra e o deslocamos ligeiramente para baixo */
+.gui__btn {
+    box-shadow: 0 .2rem .4rem #222222;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 5rem;
+    border: .3rem solid #444444;
+    cursor: pointer;
+}
+
+.gui__btn:active {
+    transform: translate(0, .3rem); /* faz com que o botão abaixe */
+    box-shadow: none;
+}
+
+/* 12. Aplicando responsividade a fonte */
+/* Para fazer isso, definimos que quando a largura da página for menor que 600px. diminuímos o tamanho da fonte para 45%. Isso ocorre porque como trabalhamos com REM durante todo o projeto, todo o jogo é alterado em função do <body>, lembra?! */
+@media (max-width: 600px) {
+    html {
+            font-size: 45%;
+    }
 }
 ```
 
 
 
-###  :ledger: 4.1 Script.js
+###  :ledger: 2.3 Script.js
+
+
 
 #### 	**- Variáveis**
 
-Neste arquivo...
+Para começar a organizar as "pontas soltas" do nosso projeto, a primeira coisa fazer foi criar as variáveis e os seletores que serão usados por todo o projeto:
+
+```javascript
+/*******************************************/
+/* 1. DEFINE VARIABLES
+/*******************************************/
+var _data = {
+    timeout: undefined, // para controlar o tempo de resposta do usuário
+    sounds: [], // os sons do jogo
+
+    score: 0, // para controlar a pontuação
+    gameSequence: [], // função que irá receber a sequência de cores do jogo, a sequência será guardada dentro dos arrays
+    playerSequence: [] // função que irá receber a sequência de cores selecionadas pelo jogador, a sequência será alocada dentro dos arrays
+};
+
+// A chamada dessas variáveis será da seguinte forma: _data.timeout/score/gameSequence...
+
+/*******************************************/
+/* 2. DOCUMENT SELECTORS
+/*******************************************/
+// Documento.querySelector é o método para acessar as classes no nosso arquivo .css. Ao alocá-los em variávies, podemos fazer essa chamada somente com "_gui.start/colors/counter"
+const _gui = {
+    start: document.querySelector(".gui__btn--start"),
+    colors: document.querySelectorAll(".genius__color"), // repare que aqui destacamos 'SelectorAll', significa que colors englobará todas as classes que possuírem esse nome!
+    counter: document.querySelector(".gui__counter")
+}
+```
+
+
+
+#### 	**- :computer_mouse:Funções de Clique**
+
+Para começar, devemos configurar o nosso jogo para entender que ao receber um "clique" do usuário, determinada ação deve ser executada. Essas ações serão criadas posteriormente em funções.
+
+```javascript
+/*******************************************/
+/* 4. GAME
+/*******************************************/
+// Para esse tipo de espera, usamos o '.addEventListener', que serve como uma "escuta" de alguma ação, para então executar outra coisa. Nesse caso, o 'click'.
+
+// 4.1 Configura a ação do botão START
+// Repare na chamada, '_gui.start', estamos indicando que a classe '.gui__btn--start' ao receber um "click", execute a função 'startGame()'.
+_gui.start.addEventListener("click", () => {
+    startGame();
+});
+
+// 4.2 Configura a ação do click sobre as cores!
+// Repare na chamada, '_gui.colors', lembrando que nessa propriedade, guardamos todas as cores do jogo. Com isso, utilizamos o .forEach para percorrer e aplicar a "escuta" a todas as classes de cores e em seguida executar a função 'padListener'.
+_gui.colors.forEach(pad => {
+    pad.addEventListener("click", padListener);
+});
+```
+
+
+
+#### 	**- :u6e80: Função `padListener`**
+
+A função `padListener` é a primeira a ser encontrada devido a necessidade de que ela seja executa antes da "escuta" das cores, já que nosso código aplica as ações registradas no `padListener`. Eu sei eu sei, você deve estar pensando "mas é claro, a função está definida como `const` não permitindo que ela sofra o `hoisting`", mas acontece que mesmo ao defini-la como `var` para ser vista pelo escopo global, a função simplesmente deixa de funcionar e não consegui identificar o porquê. Tanto que com a função `starGame()` isso funcionou perfeitamente! 
+
+Agora vamos conferir essa função:
+
+```javascript
+const padListener = (e) => { // Como eu disse, com var ela deixava de funcionar... lembra que padListener é chamada ao receber um clique de uma determinada cor? Então, o 'e' guarda a cor selecionada.
+    
+    
+	if(!_data.playerCanPlay) // Ao utilizar o '!', lembre-se que na lógica, significa a negação da chamada. Ou seja "se o usuário não puder jogar, return".
+		return; // ao somente colocar return, ela não será executada
+
+    // Como descobrir qual som será tocado?
+	let soundId;
+	_gui.colors.forEach((pad, key) => { // Mais uma vez percorre o as classes de cores, para que na sequência, compare a cor encontrada (pad) com a cor selecionada pelo jogador (e.target)
+		if(pad === e.target)
+		soundId = key;
+	});
+
+	e.target.classList.add("genius__color--active"); // Adiciona o efeito de ativação na cor selecionada
+
+	// _data.sounds[soundId].play();
+	_data.playerSequence.push(soundId);
+
+	setTimeout(() => { // Para permitir que o jogador perceba a cor "piscando", utilizamos um temporizador, para executar essa ação após 250ms
+		e.target.classList.remove("genius__color--active"); // remove o efeito de ativação na cor selecionada
+
+        // a cada interação, verificamos se a sequência que está sendo selecinada pelo jogador, é a sequência criada pelo jogo!
+		const currentMove = _data.playerSequence.length - 1;
+        
+        // Uma coisa é a ID da cor, que é obtida usando o e.target. Agora para obter a posição do Array em que a ID está associada, usamos o _data.playerSequence.length -1, porque o Array começa em 0! Por exemplo: 
+        // _data.playerSequence = [3] [2| 
+        // _data.gameSequence = [3] [1]
+        // _data.playerSequence.length = 2 - 1 = posição 1 do Array
+
+		if(_data.playerSequence[currentMove] !== _data.gameSequence[currentMove]) { //  Se errar, faça...
+			_data.playerCanPlay = false;
+			disablePads();
+			gameOver(_data.score);
+		}
+		else if(currentMove === _data.gameSequence.length - 1) { //  Se acertar, faça...
+			newColor();
+			playSequence();
+		}
+
+		waitForPlayerClick(); // Por fim, inclui um temporizador para verificar quanto tempo o jogador leva para responder!
+	}, 250);
+}
+```
+
+
+
+#### 	**- :u6e80: Função `playSequence`**
+
+A função `playSequence` é responsável por tocar a sequência de cores que o computador criou. Ela não é responsável por criar uma nova cor e inserir no array `_data.gameSequence`, mas somente por repetir a sequência já existente!
+
+```javascript
+// PLAY GAME SEQUENCE
+var playSequence = () => {
+    let counter = 0,
+        padOn = true; // informa se a cor está acesa ou apagado
+
+    _data.playerSequence = []; // zera a sequência do jogador
+    _data.playerCanPlay = false; // impede que o jogador faça algo enquanto a sequência é executada
+
+    changePadCursor("auto");
+
+    // Interval, é diferente de setTimeout(), o Interval executa um bloco específico de cógido, repetidas vezes com um intervalo fixo de chamadas! Nesse caso, a cada 350ms, enquanto todos os arrays de _data.gameSequence não tiverem sido percorridos! É importante notar também que essa função retorna um número, no qual estamos guardando na variável 'interval', para posteriormente interromper esse intervalo usando clearInterval(interval);
+    const interval = setInterval(() => { 
+        if(padOn) {
+            if(counter === _data.gameSequence.length) { // Interrompe o Interval, quando o contador alcançar o número de Arrays de _data.gameSequence
+                clearInterval(interval); // zera o intervalo
+                disablePads();
+                waitForPlayerClick();
+                changePadCursor("pointer");
+                _data.playerCanPlay = true;
+                return;
+            }
+
+        const sndId = _data.gameSequence[counter]; // a variável counter percorrerá todos os Arrays de gameSequence, por consequência, retorna todas as ID's das cores a serem percorridas "ID 1[POS 0]"
+        const pad = _gui.colors[sndId]; // com a informação acima, basta indicar que a ID obtida representa a cor
+        // _data.sounds[sndId].play(); é a mesma id das músicas?
+        pad.classList.add("genius__color--active"); // acende a cor obtida
+        counter++;
+        }
+        else {
+            disablePads();
+        }
+
+        padOn = !padOn; // inverte o valor de padOn;
+    }, 350);
+}
+```
+
+#### 	**- :u6e80: Função `newColor`**
+
+A função `newColor` é responsável criar uma nova cor, e inserir no array `_data.gameSequence`. Na realidade o que ela faz é gerar um número de ID, para que posteriormente esse número corresponda ao número de uma das cores já definidas no início do nosso código (lá em `_gui.colors`), para checar isso observe o que há dentro de `_gui.colors`:
+
+![image-20220113161034730](C:\Users\05725843181\AppData\Roaming\Typora\typora-user-images\image-20220113161034730.png)
+
+Ou seja, 
+
+	- **0** = Azul;
+	- **1** = Amarelo;
+	- **2** = Vermelho;
+	- **3** = Verde;
+
+Agora vamos ao código:
+
+```javascript
+// RANDOM A NEW COLOR
+var newColor = () => {
+    // Math.floor(2); // Arredonda o 2 quebrado para 2;
+    // Math.ceil(); // Arrendonda sempre para cima;
+    // Math.round(); // Arredonda igual a escola, 2.4 para baixo, 2.5 para cima;
+    _data.gameSequence.push(Math.floor(Math.random() *4)); // O "push" sempre adiciona o elemento ao fim do Array
+    _data.score++;
+
+    setScore()
+}
+```
+
+
+
+#### 	- :u6e80: Função `changeCursor`
+
+A função `changeCursor` recebe como parâmetro (`cursorType`), que se refere a qual cursor será apresentado ao chamar essa função. Basicamente quando for invocada, nós informaremos qual cursor deve ser apresentado, e deixamos que a função faça o resto!
+
+```javascript
+const changeCursor = (cursorType) => {
+    _gui.colors.forEach(pad => { // para cada cor...
+        pad.style.cursor = cursorType; // aplica o tipo de cursor passado como parâmetro
+    });
+}
+
+/* A chamada é feita dessa forma: changeCursor("auto"); 
+	<auto>: O browser determina o cursor para ser exibido baseado no contexto atual.
+	<default>: Cursor padrão, tipicamente uma seta.
+	<pointer>: Usado quando pairando o cursor sobre links, tipicamente uma mão.
+	<text>: Indica que o texto pode ser selecionado, normalmente um I maiúsculo.
+/*
+```
+
+
+
+#### 	- :u6e80: Função `blink`
+
+A função `blink` é o que faz com que o nosso elemento do **Score** corresponda ao que está acontecendo com o jogo, ela recebe como parâmetro um texto e retorna o **Callback**. O **feedback de Score**, do **erro do jogador**, e da **ação de ligar o jogo** são controladas por essa função. 
+
+Antes de conferir o código, é importante saber o que é o **`callback`**! 
+
+Basicamente, **callback** é um tipo de função que só é executada após o processamento de outra função. Na linguagem JavaScript, quando uma função é passada como um argumento de outra, ela é, então, chamada de callback. Isso é importante porque uma característica dessa linguagem é não esperar o término de cada evento para a execução do próximo. Portanto, ela contribui para controlar melhor o fluxo de processamento assíncrono. Para entender melhor isso, veja como estamos usando a função `blink`:
+
+```javascript
+var startGame() => {
+    /* Perceba que, ao invocar blink, passamos o parâmetro texto, e logo em seguida passamos uma OUTRA FUNÇÃO, mas como PARÂMETRO!
+    Isso porque a nossa intenção, é a de executar outras ações ao acionar a função blink, sem interromper o fluxo do código. Portanto, o CALLBACK é o que permite a execução dessa função que foi passada como parâmetro. */
+	blink("--", () => {
+		newColor();
+		playSequence();
+	})
+}
+```
+
+Vamos conferir:
+
+```javascript
+var blink = (text, callback) => { // recebe como parâmetro um texto, o qual será exibido no elemento css do _gui.counter
+    let counter = 0,
+        on = true;
+
+    _gui.counter.innerHTML = text; // adiciona o parâmetro de texto ao elemento do _gui.counter! 
+
+    // Mais uma vez, utilizamos o Interval, basicamente ele executará a ação de "piscar" 3 vezes, representado aqui pela remoção e inclusão da classe gui__conter--on com um intervalo de 250ms. Quando terminado, executa o CALLBACK;
+    const interval = setInterval(() => {
+        if(on) { // Se o display estiver aceso > Apague
+            _gui.counter.classList.remove("gui__counter--on");
+        } else { // Se estvier apagado > Acenda
+            _gui.counter.classList.add("gui__counter--on");
+
+            if(++counter === 3) {
+                clearInterval(interval);
+                callback();
+            }
+        }
+
+        on = !on; // A cada iteração, ativa/desativa o score para evitar que o _gui.counter não pisque.
+    }, 250);
+}
+```
+
+
+
+#### 	- :u6e80: Função `setScore`
+
+A função `setScore` é a responsável por controlar como nossa pontuação será exibida de fato no elemento `_gui.counter`. Veja como funciona:
+
+```javascript
+// CONTROLA A PONTUAÇÃO
+var setScore = () => {
+    
+    // A primeira coisa, seria invocar o score, que já armazenamos em '_data.score'. Se lembra? Mas o Score é um número, precisamos convertê-lo para STRING a fim de manipular seus caracteres e recebê-los com o 'score.length'.
+    
+    sempre apareça dois dígitos no meu display, quando estiver entre 1 e 9, 0 atrás. de 10 pra frente, não precisa mais aparecer o 0.
+    
+    "00" vai de 0 até 2 - score.length
+    
+    
+    const score = _data.score.toString(); // Para facilitar, fizemos a chamada do '_data.score', transformamos em string utilizando o método '.toString()' e declaramos seu resultado a variável 'score', tudo na mesma sentença.
+    
+    // A essa altura sabemos que 'score.length', retorna quantos caracteres o número tem.
+	/* O método substring() retorna a parte da string entre os índices inicial e final, nesse caso representados por:
+    0, como sendo o ÍNDICE INCIAL;
+    2 - score.length, como sendo o ÍNDICE FINAL;
+    
+    O objetivo, é que com isso, ele remova os zeros a depender da quantidade de caracteres que o 'score.length' tem! Veja o comportamento:
+    "00".substring(0,2 - score[ex. 1.length) = (0, 2 - 1) = "01";
+    "00".substring(0,2 - score[ex. 5].length) = (0, 2 - 1) = "05";
+    "00".substring(0,2 - score[ex. 10].length) = (0, 2 - 2) = "00"
+    
+    Chega um momento, em que nada irá aparecer, por isso utilizamos o '+ score no final da sentença!'
+    */
+      
+    const display = "00".substring(0,2 - score.length) + score;  
+    _gui.counter.innerHTML = display; // reflete o score em '_gui.counter'!
+}
+```

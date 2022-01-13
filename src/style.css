@@ -178,9 +178,6 @@ footer {
     animation:
         glow 1.5s linear infinite,
         tracking-in-contract-bck 5s cubic-bezier(0.215, 0.610, 0.355, 1.000) both;
-    -webkit-animation:
-        tracking-in-contract-bck 5s cubic-bezier(0.215, 0.610, 0.355, 1.000) both,
-        glow 1.5s linear infinite;
     transition: font-size 0.2s;
     transition-delay: 0.1s;
     letter-spacing: 2rem;
@@ -208,8 +205,7 @@ footer {
     display: block;
     bottom: 0;
     color: white;
-	-webkit-animation: tracking-in-contract-bck 1s cubic-bezier(0.215, 0.610, 0.355, 1.000) both;
-	animation: tracking-in-contract-bck 1s cubic-bezier(0.215, 0.610, 0.355, 1.000) both;
+    animation: tracking-in-contract-bck 1s cubic-bezier(0.215, 0.610, 0.355, 1.000) both;
 }
 
 /*******************************************/
@@ -263,7 +259,6 @@ footer {
     }
 
         .genius__color--blue.genius__color--active {
-            -webkit-animation: blink-2 0.3s ease-out 2 both;
 	        animation: blink-2 0.3s ease-out 2 both;
         }
 
@@ -278,7 +273,6 @@ footer {
     }
 
         .genius__color--yellow.genius__color--active {
-            -webkit-animation: blink-2 0.3s ease-out 2 both;
 	        animation: blink-2 0.3s ease-out 2 both;
         }
 
@@ -288,7 +282,6 @@ footer {
     }
 
     .genius__color--red.genius__color--active {
-        -webkit-animation: blink-2 0.3s ease-out 2 both;
         animation: blink-2 0.3s ease-out 2 both;
     }
 
@@ -308,7 +301,6 @@ footer {
     }
 
         .genius__color--green.genius__color--active {
-            -webkit-animation: blink-2 0.3s ease-out 2 both;
 	        animation: blink-2 0.3s ease-out 2 both;
         }
 

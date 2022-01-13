@@ -2,10 +2,9 @@
 /*******************************************/
 /* 1. DEFINE VARIABLES
 /*******************************************/
-
 var _data = {
     timeout: undefined,
-    souds: [],
+    sounds: [],
 
     score: 0,
     gameSequence: [],
@@ -46,7 +45,6 @@ _gui.start.addEventListener("click", () => {
 
 // CALL IT WHEN USER SELECT A COLOR
 const padListener = (e) => {
-    console.log("You've clicked");
     if(!_data.playerCanPlay)
         return;
 
@@ -69,14 +67,14 @@ const padListener = (e) => {
         if(_data.playerSequence[currentMove] !== _data.gameSequence[currentMove]) {
             _data.playerCanPlay = false;
             disablePads();
-            gameOver(_data.score);
+            gameOver();
         }
         else if(currentMove === _data.gameSequence.length - 1) {
             newColor();
             playSequence();
         }
 
-        waitForPlayerClick()
+        waitForPlayerClick();
     }, 250);
 }
 
@@ -96,7 +94,7 @@ var startGame = () => {
     _data.gameSequence = [];
     _data.playerSequence = [];
     disablePads();
-    changePadCursor("auto");
+    changeCursor("auto");
     blink("--", () => {
         newColor();
         playSequence();
@@ -104,7 +102,7 @@ var startGame = () => {
 }
 
 // GAME-OVER FUNCTION
-var gameOver = (score) => {
+var gameOver = () => {
     _data.playerCanPlay = false; // garante que o jogador não pode fazer nada;
 
     blink("!!", () => {
@@ -123,7 +121,7 @@ var playSequence = () => {
     _data.playerSequence = []; // zera a sequência do jogador
     _data.playerCanPlay = false; // impede que o jogador faça algo enquanto a sequência é executada
 
-    changePadCursor("auto");
+    changeCursor("auto");
 
     const interval = setInterval(() => {
         if(padOn) {
@@ -131,7 +129,7 @@ var playSequence = () => {
                 clearInterval(interval);
                 disablePads();
                 waitForPlayerClick();
-                changePadCursor("pointer");
+                changeCursor("pointer");
                 _data.playerCanPlay = true;
                 return;
             }
@@ -184,7 +182,7 @@ var newColor = () => {
     setScore()
 }
 
-const changePadCursor = (cursorType) => {
+const changeCursor = (cursorType) => {
     _gui.colors.forEach(pad => {
         pad.style.cursor = cursorType;
     });
@@ -197,19 +195,19 @@ const changePadCursor = (cursorType) => {
 // MANIPULA O SCORE!
 var blink = (text, callback) => {
     let counter = 0,
-        on = true;
+        on = true;  // Parte do princípio de que o contador está ligado
 
     _gui.counter.innerHTML = text;
 
-    const interval = setInterval(() => {
-        if(on) { // Se o display estiver aceso > Apague
+    const interval = setInterval(() => { // a função set interval retorna um número
+        if(on) {  // Se o display estiver aceso > Apague
             _gui.counter.classList.remove("gui__counter--on");
-        } else { // Se estvier apagado > Acenda
+        } else {  // Se estvier apagado > Acenda
             _gui.counter.classList.add("gui__counter--on");
 
             if(++counter === 3) {
                 clearInterval(interval);
-                callback();
+                callback(); // é uma função que será executada depois que parar de piscar
             }
         }
 
