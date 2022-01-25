@@ -197,7 +197,7 @@ footer {
     font-size: 6rem;
 }
 
-#footer {
+.footer {
     /* Content */
     font-size: 1.5rem;
     margin-top: 3rem;
@@ -314,7 +314,7 @@ footer {
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 2rem;
-    width: 15rem;
+    width: 25rem;
     height: 9rem;
     border: .3rem solid rgb(173, 173, 173);
     border-radius: 2rem;
