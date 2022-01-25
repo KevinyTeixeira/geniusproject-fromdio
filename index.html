@@ -6,8 +6,8 @@
         <link rel="shortcut icon" type="image/jpg" href="favicon.ico"/>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
         <link rel="stylesheet" href="src/style.css">
-        <script type="module" src="src/script.js"></script>
-        <script type="module" src="src/particles.js"></script>
+        <script type="module" src="src/scripts/script.js"></script>
+        <script type="module" src="src/scripts/particles.js"></script>
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Lobster&family=Oswald&family=Share+Tech&display=swap');
         </style>
@@ -21,13 +21,39 @@
         <header>
                 <h1 id="title">Genius Game</h1>
         </header>
+        <div class="leader__board--btn--container">
+            <div id="leader__board--btn">
+                <span class="leader__board--btn--noselect">Leaderboard</span>
+                <div class="leader__board--btn--circle"></div>   
+            </div>
+        </div>
+            <div class="leader__board">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="data__rank">Rank</th>
+                        <th class="data__nick">Nickname</th>
+                        <th class="data__score">Score</th>
+                        <th class="data__date">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="data__rank">1</td>
+                        <td class="data__nick">Keviny Teixeira</td>
+                        <td class="data__score">11</td>
+                        <td class="data__date">20/01/2022</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <div class="genius__options">
             <div class="gui">
                 <div class="group">
                         <div class="gui__counter">--</div>
                         <p class="gui__label">count</p>
                 </div> <!-- .group -->
-                <div class="group">
+                  <div class="group">
                         <div class="gui__btn gui__btn--start"></div>
                         <p class="gui__label">start</p>
                 </div> <!-- .group -->
@@ -41,6 +67,7 @@
                 <div class="genius__color genius__color--green"></div>
             </div> <!-- .genius -->
         </div> <!-- .main-game -->
+
         <footer>
             <h2 class="footer">Powered by Keviny Teixeira for Eduzz Full Stack Developer Bootcamp!</h2>
             <a class="footer" href="https://github.com/KevinyTeixeira/dio-desafio-github">Click here to access MY PROJECT on GitHub</a>

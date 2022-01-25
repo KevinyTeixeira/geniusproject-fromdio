@@ -384,3 +384,134 @@ footer {
             font-size: 45%;
     }
 }
+
+/*******************************************/
+/* 4. LEADERBOARD
+/*******************************************/
+.leader__board--btn--container {
+    height: 3rem;
+    max-width: 5rem;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2d3436;
+    background-image: linear-gradient(315deg, #2d3436 0%, #000000 74%);
+}
+
+#leader__board--btn {
+    background: #222;
+    padding: 1rem;
+    height: 50px;
+    min-width: 150px;
+    border: none;
+    border-radius: 10px;
+    color: #eee;
+    font-size: 20px;
+    font-family: 'Cookie', cursive;
+    position: relative;
+    transition: 1s;
+    -webkit-tap-highlight-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding-top: 5px;
+}
+
+#leader__board--btn:hover {
+    background: transparent;
+}
+
+#leader__board--btn .leader__board--btn--circle {
+    width: 5px;
+    height: 5px;
+    background: transparent;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    overflow: hidden;
+    transition: 500ms;
+}
+
+#leader__board--btn:hover .leader__board--btn--circle {
+    height: 50px;
+    width: 150px;
+    left: 0;
+    border-radius: 0;
+    border-bottom: 2px solid #eee;
+}
+
+.leader__board--btn--noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+.leader__board {
+    opacity: 0;
+    width: 0rem;
+    height: 0rem;
+    transition: opacity 0.6s linear;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2rem;
+    color: #999;
+    box-sizing: border-box;
+    text-align: center;
+    border: 0.4rem solid#2727279d;;
+    border-radius: 1rem;
+    transition: 1s;
+}
+
+.leader__board--visible {
+    opacity: 1;
+    margin-top: 3rem;
+    transition: opacity 0.6s linear;
+    width: 50rem;
+    height: auto;
+}
+
+.leader__board--visible:hover {
+    box-shadow: 2px 2px 16px 1px rgb(107, 107, 107);
+    transition: 1s;
+}
+
+thead {
+    color: white;
+    background-color:  radial-gradient(-15deg, blue, green, red);
+    font-size: 1.3rem;
+}
+
+td {
+    padding: 1rem 1rem;
+}
+
+tr {
+    padding: 0.5rem 1rem;
+}
+
+th {
+    padding: 1rem 1rem 0;
+}
+
+tbody .data__nick {
+    font-weight: bold;
+    color: white;
+}
+
+tbody tr:nth-child(2n) {
+    background-color: #1f232c;
+}
+
+table {
+    background-color: #16181e9d;
+    font-size: 1.1rem;
+    width: 100%;
+    border-collapse: collapse;
+}
